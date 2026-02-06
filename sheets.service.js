@@ -16,8 +16,8 @@ async function emailExists(auth, from, subject) {
 
   return rows.some(
     row =>
-      row[7] === from &&
-      row[8] === subject
+      row[0] === from &&
+      row[1] === subject
   );
 }
 

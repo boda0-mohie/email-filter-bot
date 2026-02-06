@@ -14,7 +14,7 @@ async function readEmails() {
 
   const res = await gmail.users.messages.list({
     userId: 'me',
-    maxResults: 5,
+    maxResults: 30,
     q: 'is:unread',
   });
 
