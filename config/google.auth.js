@@ -1,15 +1,15 @@
-const fs = require('fs');
-const path = require('path');
-const { google } = require('googleapis');
-const { authenticate } = require('@google-cloud/local-auth');
+const fs = require("fs");
+const path = require("path");
+const { google } = require("googleapis");
+const { authenticate } = require("@google-cloud/local-auth");
 
 const SCOPES = [
-  'https://www.googleapis.com/auth/gmail.readonly',
-  'https://www.googleapis.com/auth/spreadsheets',
+  "https://www.googleapis.com/auth/gmail.readonly",
+  "https://www.googleapis.com/auth/spreadsheets",
 ];
 
-const TOKEN_PATH = path.join(__dirname, 'token.json');
-const CREDENTIALS_PATH = path.join(__dirname, 'credentials.json');
+const TOKEN_PATH = path.join(__dirname, "../token.json");
+const CREDENTIALS_PATH = path.join(__dirname, "../credentials.json");
 
 async function authorize() {
   const credentials = JSON.parse(

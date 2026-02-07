@@ -1,3 +1,3 @@
-const { readEmails } = require('./gmail.service');
+const { readEmails } = require("./email/gmail.service");
 
 readEmails();

@@ -4,25 +4,25 @@ function filterEmail({ from, subject, content }) {
   const contentLower = content.toLowerCase();
 
   if (
-    fromLower.includes('linkedin') ||
-    subjectLower.includes('job') ||
-    contentLower.includes('job' || 'career' || 'hiring' || 'position' || 'vacancy')
+    fromLower.includes("linkedin") ||
+    subjectLower.includes("job") ||
+    contentLower.includes("job" || "career" || "hiring" || "position" || "vacancy")
   ) {
     return {
-      category: 'JOB',
+      category: "JOB",
       important: true,
     };
   }
 
-  if (fromLower.includes('newsletter')) {
+  if (fromLower.includes("newsletter")) {
     return {
-      category: 'NEWSLETTER',
+      category: "NEWSLETTER",
       important: false,
     };
   }
 
   return {
-    category: 'OTHER',
+    category: "OTHER",
     important: false,
   };
 }
