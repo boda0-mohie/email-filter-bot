@@ -3,7 +3,7 @@ const { authorize } = require("../config/google.auth");
 require("dotenv").config();
 
 const RULES_SPREADSHEET_ID = process.env.RULES_SPREADSHEET_ID;
-const RULES_RANGE = "Rules!A2:E";
+const RULES_RANGE = "Rules";
 
 async function getRules() {
   const auth = await authorize();

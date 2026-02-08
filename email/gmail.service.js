@@ -15,7 +15,7 @@ async function readEmails() {
 
   const res = await gmail.users.messages.list({
     userId: "me",
-    maxResults: 30,
+    maxResults: 100,
     q: "is:unread",
   });
 
@@ -48,7 +48,6 @@ async function readEmails() {
         matchedRule.channelId,
       );
     }
-    console.log("Saved to sheet: ", subject);
   }
 }
 

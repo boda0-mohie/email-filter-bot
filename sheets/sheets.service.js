@@ -3,13 +3,14 @@ const { authorize } = require("../config/google.auth");
 require("dotenv").config();
 
 const EMAIL_LOG_SPREADSHEET_ID = process.env.EMAILS_LOG_SPREADSHEET_ID;
+const SPREADSHEET_RANGE = "Emails_Log";
 
 async function emailExists(auth, from, subject) {
   const sheets = google.sheets({ version: "v4", auth });
 
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: EMAIL_LOG_SPREADSHEET_ID,
-    range: "Emails_Log!C:D",
+    range: SPREADSHEET_RANGE,
   });
 
   const rows = res.data.values || [];
@@ -33,7 +34,7 @@ async function appendEmailToSheet(email) {
 
   await sheets.spreadsheets.values.append({
     spreadsheetId: EMAIL_LOG_SPREADSHEET_ID,
-    range: "Emails_Log!A:E",
+    range: SPREADSHEET_RANGE,
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: [
@@ -41,7 +42,7 @@ async function appendEmailToSheet(email) {
           new Date().toLocaleString(),
           email.from,
           email.subject,
-          email.category,
+          email.channelId,
           email.important ? "YES" : "NO",
         ],
       ],
