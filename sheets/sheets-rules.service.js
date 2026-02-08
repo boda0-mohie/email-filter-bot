@@ -37,4 +37,30 @@ async function getRules() {
     .filter((rule) => rule.enabled);
 }
 
-module.exports = { getRules };
+async function addRule(rule) {
+  const auth = await authorize();
+  const sheets = google.sheets({ version: "v4", auth });
+
+  const res = await sheets.spreadsheets.values.append({
+    spreadsheetId: RULES_SPREADSHEET_ID,
+    range: RULES_RANGE,
+    valueInputOption: "USER_ENTERED",
+    resource: {
+      values: [
+        [
+          rule.sender,
+          rule.keywords.join(", "),
+          rule.negativeKeywords.join(", "),
+          rule.channelId,
+          rule.enabled,
+        ],
+      ],
+    },
+  });
+
+  console.log("Rule added successfully ✅");
+
+  return res.data.updates.updatedCells;
+}
+
+module.exports = { getRules, addRule };

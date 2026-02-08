@@ -4,7 +4,11 @@ const path = require("path");
 require("dotenv").config();
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
 client.commands = new Collection();
@@ -55,9 +59,22 @@ async function sendImportantEmail(email, channelId) {
 
   await channel.send(
     `**New Important Email**
-From: ${email.from}
-Subject: ${email.subject}`,
+      From: ${email.from}
+      Subject: ${email.subject}`,
   );
 }
 
-module.exports = { sendImportantEmail };
+async function addRule(rule) {
+  const channel = await client.channels.fetch(rule.channelId);
+  if (!channel) return;
+
+  await channel.send(
+    `**New Rule Added**
+From: ${rule.sender}
+Keywords: ${rule.keywords.join(", ")}
+Negative Keywords: ${rule.negativeKeywords.join(", ")}
+Channel: <#${rule.channelId}>`,
+  );
+}
+
+module.exports = { sendImportantEmail, addRule };

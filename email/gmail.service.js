@@ -1,5 +1,4 @@
 const { google } = require("googleapis");
-const { filterEmail } = require("./emailFilter");
 const { appendEmailToSheet } = require("../sheets/sheets.service");
 const { authorize } = require("../config/google.auth");
 const { sendImportantEmail } = require("../discord/discord.bot");
@@ -33,25 +32,23 @@ async function readEmails() {
     const subject = headers.find((h) => h.name === "Subject")?.value || "";
     const content = message.data.snippet;
 
-    const filterResult = filterEmail({ from, subject, content });
-
-    if (filterResult.important) {
-      const matchedRule = matchEmailWithRule({ from, subject, content }, rules);
-      if (matchedRule) {
-        await appendEmailToSheet({
+    const matchedRule = matchEmailWithRule({ from, subject, content }, rules);
+    if (matchedRule) {
+      await appendEmailToSheet({
+        from,
+        subject,
+        channelId: matchedRule.channelId,
+        important: true,
+      });
+      await sendImportantEmail(
+        {
           from,
           subject,
-          category: filterResult.category,
-          important: true,
-        });
-
-        await sendImportantEmail({
-          from,
-          subject,
-        }, matchedRule.channelId);
-      }
-      console.log("Saved to sheet: ", subject);
+        },
+        matchedRule.channelId,
+      );
     }
+    console.log("Saved to sheet: ", subject);
   }
 }
 

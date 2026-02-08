@@ -18,7 +18,6 @@ function matchEmailWithRule(email, rules) {
 
     // keywords (at least one)
     if (rule.keywords.length === 0) return true;
-
     return rule.keywords.some(keyword =>
       subject.includes(keyword) || content.includes(keyword)
     );
