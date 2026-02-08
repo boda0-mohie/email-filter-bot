@@ -1,39 +1,47 @@
 # Discord Gmail Job Tracker
 
-This project is an automated tool designed to monitor your Gmail inbox for job-related emails, log them into a Google Sheet, and send real-time notifications to a specified Discord channel.
+This project is an automated tool designed to monitor your Gmail inbox for job-related emails, log them into a Google Sheet, and send real-time notifications to a specified Discord channel. It includes a dynamic rule management system controllable directly from Discord.
 
 ## Features
 
 - **Gmail Integration**: Scans your Gmail inbox for unread messages.
-- **Smart Filtering**: Automatically categorizes emails based on keywords (e.g., "job", "career", "hiring") using a custom filter logic.
-- **Google Sheets Logging**: Appends details of important emails (Date, Sender, Subject, Category) to a Google Sheet.
-- **Discord Notifications**: Sends an alert to a Discord channel when an important job-related email is found.
+- **Dynamic Rule Engine**: Filters emails based on sender, keywords, and negative keywords.
+- **Discord Slash Commands**: Manage your email filtering rules directly from Discord using `/rules`.
+- **Google Sheets Integration**:
+  - Logs important emails to a specific sheet.
+  - Reads filtering rules from a dedicated "Rules" sheet.
+- **Real-time Notifications**: Sends alerts to specific Discord channels based on matched rules.
 
 ## Prerequisites
 
 - Node.js installed on your machine.
 - A Google Cloud Project with Gmail and Sheets APIs enabled.
-- A Discord Bot with appropriate permissions.
+- A Discord Bot with appropriate permissions (including slash commands).
 
 ## Installation
 
 1.  **Clone the repository:**
+
     ```bash
     git clone <repository-url>
     cd discord-project
     ```
 
 2.  **Install dependencies:**
+
     ```bash
     npm install
     ```
 
 3.  **Environment Setup:**
     Create a `.env` file in the root directory and add the following variables:
+
     ```env
     DISCORD_TOKEN=your_discord_bot_token
-    CHANNEL_ID=your_discord_channel_id
-    SPREADSHEET_ID=your_google_sheet_id
+    client_id=your_discord_client_id
+    guild_id=your_discord_server_id
+    SPREADSHEET_ID=your_main_logging_sheet_id
+    RULES_SPREADSHEET_ID=your_rules_sheet_id
     ```
 
 4.  **Google Credentials:**
@@ -42,28 +50,33 @@ This project is an automated tool designed to monitor your Gmail inbox for job-r
 
 ## Usage
 
-Run the application:
+1.  **Start the application:**
 
-```bash
-node index.js
-```
+    ```bash
+    node index.js
+    ```
 
-The script will:
-1.  Authenticate with Google services.
-2.  Fetch unread emails from your inbox.
-3.  Filter them based on `emailFilter.js` logic.
-4.  If an email is flagged as **Important (JOB)**:
-    - It gets added to your Google Sheet.
-    - A notification is sent to your Discord channel.
+2.  **Manage Rules via Discord:**
+    - `/rules list`: View all active filtering rules.
+    - `/rules add`: Add a new rule with the following parameters:
+      - `sender`: Email address to match (e.g., `no-reply@greenhouse.io`).
+      - `keywords`: Comma-separated list of words to look for (e.g., `interview, schedule`).
+      - `negative-keywords`: Comma-separated list of words to exclude (e.g., `rejection`).
+      - `channel`: The Discord channel where notifications for this rule should be sent.
+
+3.  **Bot Operation:**
+    - The bot periodically checks for unread emails.
+    - It matches emails against the rules defined in your Google Sheet (managed via the slash command).
+    - If a match is found, it logs the email and sends a notification to the configured channel.
 
 ## Project Structure
 
+- `command/`: Contains Discord slash command definitions (e.g., `rules.js`).
+- `config/`: Configuration files (e.g., `google.auth.js`).
+- `discord/`: Discord bot logic and event handlers.
+- `email/`: Gmail service and email matching logic.
+- `sheets/`: Google Sheets interaction services (logging and rules).
 - `index.js`: Main entry point.
-- `gmail.service.js`: Handles Gmail API interaction and main logic flow.
-- `sheets.service.js`: Handles Google Sheets API interaction.
-- `discord.bot.js`: Manages Discord bot connection and messaging.
-- `emailFilter.js`: Contains the logic to categorize emails.
-- `google.auth.js`: Handles Google OAuth2 authentication.
 
 ## Technologies Used
 
